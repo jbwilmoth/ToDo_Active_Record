@@ -20,4 +20,14 @@ class Task < ActiveRecord::Base
     Task.update(id, completed: true)
   end
 
+  def string_with_tags
+    "#{id.to_s.ljust(3)} |#{check_status(completed)}| #{task_name}  TAGS: #{tags.map(&:tag_name).join(', ')}"
+  end
+
+  def self.all_with_tags
+    self.all.map do |task|
+      task.string_with_tags
+    end
+  end
 end
+

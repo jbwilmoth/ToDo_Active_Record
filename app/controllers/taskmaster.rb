@@ -26,7 +26,7 @@ class TaskMaster
   end
 
   def parse_input
-    case input
+    case input.downcase
     when "list"
       show_list
     when "add"
@@ -35,14 +35,34 @@ class TaskMaster
       complete_task
     when "delete"
       delete_task
+    when "add tag"
+      add_tag
     when "view by tag"
       view_by_tag
+    when "list tags"
+      show_tags
+    when "assign tag"
+      assign_tag
+    when "list with tags"
+      show_list_with_tags
     when "help"
       display_options
     when "quit", "exit"
     else
       invalid_command
     end
+  end
+
+  def assign_tag
+    task_to_assign
+    task_id = get_input
+    tag_to_assign
+    tag_id = get_input
+    TaskTag.create(task_id: task_id, tag_id: tag_id)
+  end
+
+  def add_tag
+    Tag.add(get_input)
   end
 
   def view_by_tag
@@ -54,6 +74,14 @@ class TaskMaster
 
   def show_list
     puts Task.all
+  end
+
+  def show_list_with_tags
+    puts Task.all_with_tags
+  end
+
+  def show_tags
+    puts Tag.all
   end
 
   def create_task
@@ -79,4 +107,6 @@ class TaskMaster
 end
 
 task_master =TaskMaster.new
+
+
 

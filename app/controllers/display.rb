@@ -9,12 +9,17 @@ module Display
 \033[1;31m
 Here are the options\033[0;31m available to you:
 \033[36m-----------------------------------------------
-\033[33m'list'       -    list all of your tasks
-'add'        -    add a new task to your list
-'complete'   -    mark a task as completed
-'delete'     -    delete a task from your list
-'help'       -    display this menu
-'quit'       -    quit the program
+\033[33m'list'           -    list all of your tasks
+'list with tag'  -    list all tasks along with their tags
+'add'            -    add a new task to your list
+'complete'       -    mark a task as completed
+'delete'         -    delete a task from your list
+'add tag'        -    creates a new tag
+'assign tag'     -    assign a tag to a pre-existing task
+'view by tag'    -    view tasks by tag
+'list tags'      -    list all existing tags
+'help'           -    display this menu
+'quit'           -    quit the program
 \033[36m-----------------------------------------------\033[0m
 STRING
   end
@@ -49,6 +54,14 @@ STRING
 
   def invalid_command
     puts "\033[1;33mWhoops!  I didn't quite get that.\033[0m  Remember, you can say 'help' at any time to get a list of valid commands."
+  end
+
+  def task_to_assign
+    puts "Enter a task to assign a tag to"
+  end
+
+  def tag_to_assign
+    puts "Enter a tag to assign"
   end
 
 end
