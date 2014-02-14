@@ -1,50 +1,7 @@
 require_relative '../models/task'
 require_relative '../../config/application'
+require_relative 'display'
 require 'active_record'
-# require '../../db'
-
-module Display
-
-  def welcome_message
-  end
-
-  def display_options
-    puts "Here are the options available to you:"
-    puts "-----------------------------------------------"
-    puts "'list'       -    list all of your tasks"
-    puts "'add'        -    add a new task to your list"
-    puts "'complete'   -    mark a task as completed"
-    puts "'delete'     -    delete a task from your list"
-    puts "'help'       -    display this menu"
-    puts "'quit'       -    quit the program"
-    puts "-----------------------------------------------"
-  end
-
-  def get_input
-    self.input = gets.chomp
-  end
-
-  def prompt_for_task
-    puts "What would you like to add to your list?"
-  end
-
-  def prompt_for_task_id_delete
-    puts "Please enter the id number of the task you would like to delete:"
-  end
-
-  def prompt_for_task_id_complete
-    puts "Please enter the id number of the task you would like to mark as complete:"
-  end
-
-  def ask_for_command
-    puts "whatcha wanna do?"
-  end
-
-  def escape_prompt
-    puts "'skip' ---- to escape"
-  end
-
-end
 
 class TaskMaster
   include Display
@@ -65,7 +22,7 @@ class TaskMaster
     ask_for_command
     get_input
     parse_input
-    run_loop unless input == "quit"
+    run_loop unless input == "quit" or input == "exit"
   end
 
   def parse_input
@@ -78,35 +35,46 @@ class TaskMaster
       complete_task
     when "delete"
       delete_task
+    when "view by tag"
+      view_by_tag
     when "help"
       display_options
+    when "quit", "exit"
+    else
+      invalid_command
     end
   end
 
+  def view_by_tag
+    prompt_for_tag
+    escape_prompt
+    get_input
+    puts Tag.where("tag_name = ?", input).first.tasks unless input == "back" || input == "^[[A"
+  end
 
   def show_list
     puts Task.all
   end
 
   def create_task
-    escape_prompt
     prompt_for_task
+    escape_prompt
     get_input
-    Task.add(input) unless input == "skip"
+    Task.add(input) unless input == "back" || input == "^[[A"
   end
 
   def delete_task
-    escape_prompt
     prompt_for_task_id_delete
+    escape_prompt
     get_input
-    Task.delete(input)  unless input == "skip"
+    Task.delete(input) unless input == "back"
   end
 
   def complete_task
-    escape_prompt
     prompt_for_task_id_complete
+    escape_prompt
     input = get_input
-    Task.complete(input)  unless input == "skip"
+    Task.complete(input) unless input == "back"
   end
 end
 
