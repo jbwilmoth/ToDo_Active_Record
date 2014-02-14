@@ -27,25 +27,27 @@ class TaskMaster
 
   def parse_input
     case input.downcase
-    when "list"
+    when "list", "list all", "show all", "list tasks", "view all", "view tasks"
       show_list
-    when "add"
+    when "add", "add task"
       create_task
-    when "complete"
+    when "complete", "complete task"
       complete_task
-    when "delete"
+    when "delete", "delete task"
       delete_task
     when "add tag"
       add_tag
     when "view by tag"
       view_by_tag
-    when "list tags"
+    when "list tags", "view tags"
       show_tags
+    when "delete tag"
+      delete_tag
     when "assign tag"
       assign_tag
-    when "list with tags"
+    when "list with tags", "list all with tags", "show with tags", "view with tags", "view all with tags"
       show_list_with_tags
-    when "help"
+    when "help", "menu"
       display_options
     when "quit", "exit"
     else
@@ -59,6 +61,7 @@ class TaskMaster
     tag_to_assign
     tag_id = get_input
     TaskTag.create(task_id: task_id, tag_id: tag_id)
+    confirm_assign_tag(task_id, tag_id)
   end
 
   def add_tag
@@ -69,19 +72,11 @@ class TaskMaster
     prompt_for_tag
     escape_prompt
     get_input
-    puts Tag.where("tag_name = ?", input).first.tasks unless input == "back" || input == "^[[A"
+    puts find_tasks_by_tag
   end
 
-  def show_list
-    puts Task.all
-  end
-
-  def show_list_with_tags
-    puts Task.all_with_tags
-  end
-
-  def show_tags
-    puts Tag.all
+  def find_tasks_by_tag
+    Tag.where("id = ?", input).first.tasks unless input == "back" || input == "^[[A"
   end
 
   def create_task
@@ -95,7 +90,14 @@ class TaskMaster
     prompt_for_task_id_delete
     escape_prompt
     get_input
+    confirm_delete_task
     Task.delete(input) unless input == "back"
+  end
+
+  def delete_tag
+    prompt_for_tag_to_delete
+    get_input
+    Tag.delete(input) unless input == "back"
   end
 
   def complete_task

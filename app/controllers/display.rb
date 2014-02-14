@@ -9,17 +9,18 @@ module Display
 \033[1;31m
 Here are the options\033[0;31m available to you:
 \033[36m-----------------------------------------------
-\033[33m'list'           -    list all of your tasks
-'list with tag'  -    list all tasks along with their tags
-'add'            -    add a new task to your list
-'complete'       -    mark a task as completed
-'delete'         -    delete a task from your list
-'add tag'        -    creates a new tag
-'assign tag'     -    assign a tag to a pre-existing task
-'view by tag'    -    view tasks by tag
-'list tags'      -    list all existing tags
-'help'           -    display this menu
-'quit'           -    quit the program
+\033[33m'list'            -    list all of your tasks
+'list with tags'  -    list all tasks along with their tags
+'add'             -    add a new task to your list
+'complete'        -    mark a task as completed
+'delete'          -    delete a task from your list
+'add tag'         -    create a new tag
+'delete tag'      -    delete an existing tag
+'assign tag'      -    assign a tag to an existing task
+'view by tag'     -    view tasks by tag
+'list tags'       -    list all existing tags
+'help'            -    display this menu
+'quit'            -    quit the program
 \033[36m-----------------------------------------------\033[0m
 STRING
   end
@@ -33,11 +34,45 @@ STRING
   end
 
   def prompt_for_tag
-    print "\033[1;33mWhat tag are you searching for?\033[0m"
+    puts
+    show_tags
+    print "\033[1;33mPlease enter the id of the tag you would like to search for.\033[0m"
+  end
+
+  def prompt_for_tag_to_delete
+    puts
+    show_tags
+    print "\033[1;33mPlease enter the id of the tag you would like to delete:\n\n\033[0m"
+  end
+
+  def show_list_with_tags
+    puts
+    puts "YOUR TO-DO LIST WITH TAGS:"
+    puts
+    puts Task.all_with_tags
+  end
+
+  def confirm_delete_task
+    puts "You've got it!  Task #{input}: DELETED."
+  end
+
+  def show_list
+    puts
+    puts "YOUR TO-DO LIST:"
+    puts
+    puts Task.all
+  end
+
+  def show_tags
+    puts Tag.all
   end
 
   def prompt_for_task_id_delete
     print "\033[1;33mPlease enter the id number of the task you would like to delete.\033[0m"
+  end
+
+  def confirm_assign_tag(task_id, tag_id)
+    puts "You have assigned tag number #{tag_id} to task number #{task_id}."
   end
 
   def prompt_for_task_id_complete
@@ -57,11 +92,11 @@ STRING
   end
 
   def task_to_assign
-    puts "Enter a task to assign a tag to"
+    puts "Which task would you like to assign a tag to?  Enter a task id."
   end
 
   def tag_to_assign
-    puts "Enter a tag to assign"
+    puts "Which tag would you like to assign to that task?  Enter a tag id."
   end
 
 end
